@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+<div th:replace="shared/header :: header('productForm')"/>
+<div id="main" class="container">
+
+            <h1>Dodaj/edytuj produkt</h1>
+            <form th:method="POST" th:object="${product}" th:action="@{/productForm}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="text" name="name" th:value="*{name}"
+                           class="form-control" th:classappend="${#fields.hasErrors('name')}?'is-invalid'"
+                           placeholder="Nazwa produktu" required="true" autofocus="true"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('name')}">
+                        <span th:each="err : ${#fields.errors('name')}" th:text="${err}"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="description" th:value="*{description}"
+                           class="form-control" th:classappend="${#fields.hasErrors('description')}?'is-invalid'"
+                           placeholder="Opis produktu" required="true" autofocus="true"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('description')}">
+                        <span th:each="err : ${#fields.errors('description')}" th:text="${err}"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{price}"
+                           class="form-control" th:classappend="${#fields.hasErrors('price')}?'is-invalid'"
+                           placeholder="Cena" required="true"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('price')}">
+                        <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="date" th:field="*{releaseDate}"
+                           class="form-control" th:classappend="${#fields.hasErrors('releaseDate')}?'is-invalid'"
+                           placeholder="Data wydania" required="true"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('releaseDate')}">
+                        <p th:each="err : ${#fields.errors('releaseDate')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="requirements" th:value="*{requirements}"
+                           class="form-control" th:classappend="${#fields.hasErrors('requirements')}?'is-invalid'"
+                           placeholder="Wymagania sprzętowe produktu" required="false" autofocus="true"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('requirements')}">
+                        <span th:each="err : ${#fields.errors('requirements')}" th:text="${err}"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select th:field="*{availability.id}" class="form-control"
+                            th:classappend="${#fields.hasErrors('availability.id')}?'is-invalid'">
+                        <option value="-1">--wybierz dostępność--</option>
+                        <option th:each="type : ${availabilityTypes}"
+                                th:value="${type.id}"
+                                th:text=" ${type.name}"
+                        />
+                    </select>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('availability.id')}">
+                        <p th:each="err : ${#fields.errors('availability.id')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select th:field="*{category.id}" class="form-control"
+                            th:classappend="${#fields.hasErrors('category.id')}?'is-invalid'">
+                        <option value="-1">--wybierz kategorię--</option>
+                        <option th:each="category : ${categoryList}"
+                                th:value="${category.id}"
+                                th:text=" ${category.name}"
+                        />
+                    </select>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('category.id')}">
+                        <p th:each="err : ${#fields.errors('category.id')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select th:field="*{platform.id}" class="form-control"
+                            th:classappend="${#fields.hasErrors('platform.id')}?'is-invalid'">
+                        <option value="-1">--wybierz platformę--</option>
+                        <option th:each="platform : ${platformList}"
+                                th:value="${platform.id}"
+                                th:text=" ${platform.name}"
+                        />
+                    </select>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('platform.id')}">
+                        <p th:each="err : ${#fields.errors('platform.id')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div th:each="lang : ${languageList}" class='checkbox' style="left:25px;">
+                        <input th:id="${lang}" type="checkbox" th:field="*{languages}"
+                               th:value="${lang.id}"/>
+                        <label th:text="${lang.name}" th:for="${lang}"></label>
+                    </div>
+
+                    <div class="error text-danger" th:if="${#fields.hasErrors('languages')}">
+                        <p th:each="err : ${#fields.errors('languages')}" th:text="${err}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="file" id="file" accept="image/*" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Zatwierdź</button>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input type="hidden" th:field="*{id}"/>
+                        <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"/>
+                    </div>
+                </div>
+            </form>
+
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

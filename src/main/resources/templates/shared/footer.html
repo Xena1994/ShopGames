@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div id="footer" th:fragment="footer">
+
+    <div class="container">
+
+        <footer>
+            <hr/>
+            <div id = "admin" sec:authorize="hasRole('ADMIN')">
+                <div class="btn-group btn-group-justified">
+                    <span class="btn btn-primary">Tryb admina:</span>
+                    <a class="btn btn-info" th:href="@{/products}">Produkty</a>
+                    <a class="btn btn-info" th:href="@{/categories}">Kategorie</a>
+                    <a class="btn btn-info" th:href="@{/platforms}">Platformy</a>
+                    <a class="btn btn-info" th:href="@{/availability}">Dostępność</a>
+                    <a class="btn btn-info" th:href="@{/languages}">Języki</a>
+                    <a class="btn btn-info" th:href="@{/orders}">Zamówienia</a>
+                </div>
+            </div>
+
+            <p>© 2022 Jan Kowalski </p>
+        </footer>
+    </div>
+
+</div>
+</body>
+</html>

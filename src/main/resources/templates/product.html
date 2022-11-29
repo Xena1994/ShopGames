@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+<div th:replace="shared/header :: header('product')"/>
+
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-9 col-md-9">
+            <div class="row">
+                <div class="col-lg-5 col-md-5">
+                    <img style="width: 100%; height: auto;" class="img-rounded" th:src="${product.imageName != null ? product.imageName : '/images/no_cover.png'}"/>
+
+                </div>
+                <div class="col-lg-7 col-md-7">
+                    <div class="btn-group">
+                        <a class="btn btn-primary" th:href="@{/platform(id=${product.platform.id})}"
+                           th:text="${product.platform.name}">Platforma</a>
+                        <a class="btn btn-primary" th:href="@{/category(id=${product.category.id})}"
+                           th:text="${product.category.name}">Kategoria</a>
+                        <a class="btn btn-primary" th:href="@{/products(id=${product.id})}"
+                           th:text="${product.name}">Nazwa gry</a>
+                    </div>
+                    <H1 th:text="${product.name}"/>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <h4 class="list-group-item-heading">Data wydania: </h4>
+                            <p class="list-group-item-text" th:text="${#dates.format(product.releaseDate, 'dd-MM-yyyy')}"></p>
+                        </li>
+                        <li class="list-group-item">
+                            <h4 class="list-group-item-heading">Dostępność: </h4>
+                            <p class="list-group-item-text" th:text="${product.availability.name}"></p>
+                        </li>
+                        <li class="list-group-item">
+                            <h4 class="list-group-item-heading">Gatunek: </h4>
+                            <p class="list-group-item-text" th:text="${product.category.name}"></p>
+                        </li>
+                        <li class="list-group-item">
+                            <h4 class="list-group-item-heading">Jezyki: </h4>
+                            <span th:if="${product.languages.isEmpty()}">Brak</span>
+
+                            <p th:unless="${product.languages.isEmpty()}">
+                                <ul>
+                                    <li th:each="lang : ${product.languages}" th:text="${lang.name}"/>
+                                </ul>
+                            </p>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="row">
+                <hr/>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#description" role="tab" data-toggle="tab">Opis</a></li>
+                    <li><a href="#requirements" role="tab" data-toggle="tab">Wymagania sprzętowe</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="description">
+                        <p th:text="${product.description}"></p>
+                    </div>
+                    <div class="tab-pane" id="requirements">
+                        <p th:text="${product.requirements}"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="list-group-item-heading">Cena: </span><br/>
+                    <strong><span id="price" class="list-group-item-text" th:text="${#numbers.formatDecimal(product.price,1,2,'COMMA')} + ' PLN'"></span></strong>
+                </li>
+                <li class="list-group-item" th:if="${product.availability.inStock}">
+                    <a class="btn btn-danger"th:href="@{/order/addProduct(id=${product.id})}">Dodaj do koszyka</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')" class="list-group-item list-group-item">
+                    <a class="btn btn-danger" th:href="@{products(did=${product.id})}">Usuń</a>
+                    <a class="btn btn-success" th:href="@{productForm(id=${product.id})}">Edytuj</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

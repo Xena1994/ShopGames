@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+<div th:replace="shared/header :: header('availabilityList')"/>
+<div id="main" class="container">
+
+<h1>Języki</h1>
+
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Nazwa</th>
+                        <th sec:authorize="hasRole('ADMIN')">Opcje</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="availability : ${availabilityListPage.content}">
+                        <td>
+                            <a>[[${availability.name}]]</a>
+                        </td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="btn btn-danger" th:href="@{availability(did=${availability.id})}">Usuń</a>
+                            <a class="btn btn-success" th:href="@{availabilityForm(id=${availability.id})}">Edytuj</a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+
+                <div th:replace="shared/pagination :: pager('/availability', ${availabilityListPage})"></div>
+    <a sec:authorize="hasRole('ADMIN')" class="btn btn-success" href="availabilityForm">Dodaj Nowy</a>
+
+            </div>
+        </div>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

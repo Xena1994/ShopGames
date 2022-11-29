@@ -1,0 +1,24 @@
+#main{
+    background-color: cadetblue;
+}
+
+#admin {
+    background-color: red;
+}
+
+body{
+
+
+    background-image: url('/images/tlo.png');
+}
+
+#klik{
+    background-color: #4CAF50;
+    font-size: 16px;
+    color: red;
+}
+
+#demo{
+
+    color: red;
+}

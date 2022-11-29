@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+
+
+
+</head>
+<body>
+<div th:replace="shared/header :: header('home')"/>
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div  id="migaj"><h4>Twoj Salon z grami na twoim osiedlu : )!</h4>
+
+                <div class="panel-body">
+                    <h4>Adres: </h4>
+                    You & Games<br/>
+                    ul. Marszałkowska 23<br/>
+                    03 -980 Warszawa<br/>
+                </div>
+                </div>
+                    <script>
+                        var myWindow;
+
+                        flash("migaj", "Blue", 550, "Red", 550,"Green",550);
+
+                        function flash(id, kolor, czas, kolor2, czas2,kolor3,czas3)
+                        {
+                            document.getElementById(id).style.color = kolor;
+                            setTimeout('flash("' + id + '","' + kolor2 + '",' + czas2 + ',"'+ kolor3 +'",'+ czas3 +',"' + kolor + '",' + czas + ')', czas);
+                        }
+                    </script>
+                    <img src="/images/boy.png"/>
+                <script>
+                    function funkcja() {
+                        document.getElementById("demo").innerHTML = "administrator i właściciel Jan Kowalski email : jan123@gmail.com";
+                    }
+
+                </script>
+                <button id="klik" onclick="funkcja()" type="button">Zapraszamy do kontaktu :)!</button>
+                <p id="demo"></p>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="shared/footer :: footer"/>
+</body>
+</html>

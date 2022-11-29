@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+<div th:replace="shared/header :: header('productList')"/>
+<div id="main" class="container">
+
+            <form th:method="POST" th:action="@{products}" th:object="${searchCommand}">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <input th:field="*{phrase}" placeholder="Fraza" class="form-control"
+                               th:classappend="${#fields.hasErrors('phrase')}?'is-invalid'"/>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('phrase')}">
+                            <p th:each="err : ${#fields.errors('phrase')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+
+                        <select th:field="*{category}" class="form-control"
+                                th:classappend="${#fields.hasErrors('category')}?'is-invalid'">
+                            <option value="-1">--wybierz kategorię--</option>
+                            <option th:each="category : ${categoriesList}"
+                                    th:value="${category.id}"
+                                    th:text=" ${category.name}"
+                            />
+                        </select>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('platform')}">
+                            <p th:each="err : ${#fields.errors('platform')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+
+                        <select th:field="*{platform}" class="form-control"
+                                th:classappend="${#fields.hasErrors('platform')}?'is-invalid'">
+                            <option value="-1">--wybierz platformę--</option>
+                            <option th:each="platform : ${platformList}"
+                                    th:value="${platform.id}"
+                                    th:text=" ${platform.name}"
+                            />
+                        </select>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('platform')}">
+                            <p th:each="err : ${#fields.errors('platform')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2">
+
+                        <input th:field="*{minPrice}" placeholder="Cena od" class="form-control"
+                               th:classappend="${#fields.hasErrors('minPrice')}?'is-invalid'"/>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('minPrice')}">
+                            <p th:each="err : ${#fields.errors('minPrice')}" th:text="${err}"></p>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-md-2">
+
+                        <input th:field="*{maxPrice}" placeholder="Cena do" class="form-control"
+                               th:classappend="${#fields.hasErrors('maxPrice')}?'is-invalid'"/>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('maxPrice')}">
+                            <p th:each="err : ${#fields.errors('maxPrice')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-md-8"></div>
+
+                    <div class="form-group col-md-2">
+                        <a th:if="${searchCommand.isEmpty() eq false or #fields.hasErrors('*')}" th:href="@{products(all)}" class="btn btn-success">
+                            <span class="glyphicon glyphicon-refresh"></span> Pokaż wszystko
+                        </a>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-info">
+                            <span class="glyphicon glyphicon-search"></span> Wyszukaj
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+            <div th:if="${productListPage.hasContent() eq false}">
+                <span th:if="${searchCommand.isEmpty()}">Brak produktów w bazie</span>
+                <span th:unless="${searchCommand.isEmpty()}">Brak wyników wyszukiwania</span>
+            </div>
+            <div th:if="${productListPage.hasContent() eq true}">
+
+
+
+            <span th:if="${searchCommand.isEmpty()}">
+                Ilość pozycji: [[${productListPage.totalElements}]]
+            </span>
+                <span th:unless="${searchCommand.isEmpty()}">
+                Wynik wyszukiwania: [[${productListPage.totalElements}]]
+            </span>
+
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Platforma</th>
+                        <th>Nazwa</th>
+                        <th>Kategoria</th>
+                        <th>Data wydania</th>
+                        <th>Cena</th>
+                        <th sec:authorize="hasRole('ADMIN')">Opcje</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${productListPage.content}">
+                        <td>
+                            <a th:href="@{/platform(id=${product.platform.id})}">[[${product.platform.name}]]</a>
+                        </td>
+                        <td>
+
+                            <a th:href="@{/products(id=${product.id})}">[[${product.name}]]</a>
+                        </td>
+                        <td>[[${product.category.name}]]</td>
+                        <td>[[${#dates.format(product.releaseDate, 'dd-MM-yyyy')}]]</td>
+                        <td>[[${#numbers.formatDecimal(product.price,1,2,'COMMA')}]]</td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="btn btn-danger" th:href="@{products(did=${product.id})}">Usuń</a>
+                            <a class="btn btn-success" th:href="@{productForm(id=${product.id})}">Edytuj</a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+
+                <div th:replace="shared/pagination :: pager('/products', ${productListPage})"></div>
+
+            </div>
+
+            <a sec:authorize="hasRole('ADMIN')" class="btn btn-success" href="productForm">Dodaj Nowy</a>
+
+
+        </div>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

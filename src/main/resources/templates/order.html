@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+    <div th:replace="shared/header :: header('order')"/>
+        <div id="main" class="container">
+            <h1 class="jumbotron">
+                Koszyk <span sec:authentication="name"></span>
+            </h1>
+
+            <div class="panel-default well" th:each="product : ${products.entrySet()}">
+                <div class="panel-heading">
+                    <h3><a th:text="${product.getKey().name}" th:href="@{'/products' + ${product.getKey().id}}">Title</a></h3>
+                </div>
+                <div class="row panel-body">
+                    <div th:inline="text" class="col-md-2">Cena: [[${product.getKey().price}]] PLN</div>
+                    <a th:href="@{/order/removeProduct(id=${product.getKey().id})}" class="col-md-1">
+                        <button type="button" class="btn btn-primary">Usuń z koszyka</button>
+                    </a>
+                </div>
+                <br></br>
+            </div>
+
+            <div class="row">
+                <h2 class="col-md-9" th:inline="text">Łącznie: [[${total}]] PLN</h2>
+                <a th:href="@{/order/checkout}" class="col-md-1">
+                    <button type="button" class="btn btn-danger" th:disabled="!${total gt 0}">Potwierdź zakup</button>
+                </a>
+            </div>
+
+
+        </div>
+    </div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>
